@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Sensor, DisasterEvent, NGO } from '../types';
 import { releaseFunds } from '../utils/blockchain';
 import { sendSMS } from '../utils/twilio';
-import { supabase } from '../utils/supabase';
 import { AlertTriangle, Droplets, Activity } from 'lucide-react';
 
 interface DisasterSimulatorProps {
@@ -80,16 +79,6 @@ const DisasterSimulator: React.FC<DisasterSimulatorProps> = ({
                         your wallet. Please respond immediately.`;
         
         await sendSMS(closestNGO.phone, message);
-        await supabase.from('disaster_events').insert(newEvent);
-        
-        await supabase
-          .from('sensors')
-          .update({ 
-            status: severity > 7 ? 'critical' : 'warning',
-            lastReading: severity,
-            lastUpdated: new Date().toISOString()
-          })
-          .eq('id', sensor.id);
 
         setResult({
           success: true,
