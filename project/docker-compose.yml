@@ -1,0 +1,50 @@
+version: '3.8'  # Specifies the Docker Compose file format version
+
+services:  # Defines the services (containers) to run
+  mongo1:  # First MongoDB instance (primary)
+    image: mongo:6  # Uses official MongoDB version 6
+    hostname: mongo1  # Sets the hostname inside the container
+    networks:
+      - mongo-cluster  # Connects to the custom network
+    volumes:
+      - mongo1_data:/data/db  # Stores MongoDB data persistently
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]  # Enables replica set
+    deploy:
+      replicas: 1  # Runs only 1 instance (no scaling)
+      restart_policy:
+        condition: on-failure  # Restarts if the container fails
+
+  mongo2:  # Second MongoDB instance (secondary)
+    image: mongo:6
+    hostname: mongo2
+    networks:
+      - mongo-cluster
+    volumes:
+      - mongo2_data:/data/db
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  mongo3:  # Third MongoDB instance (secondary)
+    image: mongo:6
+    hostname: mongo3
+    networks:
+      - mongo-cluster
+    volumes:
+      - mongo3_data:/data/db
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+networks:  # Defines networks for containers to communicate
+  mongo-cluster:
+    driver: overlay  # Uses Swarm's overlay network
+
+volumes:  # Defines persistent storage for MongoDB data
+  mongo1_data:
+  mongo2_data:
+  mongo3_data:
