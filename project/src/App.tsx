@@ -7,7 +7,8 @@ import SimulatorPage from './pages/SimulatorPage';
 import { initBlockchain } from './utils/blockchain';
 import NewsVerificationPage from './pages/NewsVerification';
 import NotFound from './pages/NotFound';
-import UserLogin from './pages/userLogin';
+// import UserLogin from './pages/userLogin';
+import UserLogin from './pages/UserLogin';
 function App() {
   useEffect(() => {
     // Initialize blockchain connection

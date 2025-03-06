@@ -164,7 +164,7 @@ const SimulatorPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-black min-h-screen">
+    <div className="max-w-7-screen mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-black min-h-screen">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold font-mono bg-gradient-to-r from-pink-500 to-yellow-500 bg-clip-text text-transparent">
