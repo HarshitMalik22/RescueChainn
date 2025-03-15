@@ -53,10 +53,6 @@ RescueChainn isn’t just a project—it’s a paradigm shift in how we deliver 
 
 We welcome passionate contributors! Fork the repository, create your feature branch, and submit a pull request. Let’s innovate together and redefine rapid aid delivery.
 
-## License
-
-This project is open-source under the [MIT License](LICENSE).
-
 ## Contact
 
 For collaborations or inquiries, please reach out to [Harshit Malik](https://github.com/HarshitMalik22).
