@@ -166,7 +166,7 @@ const Map: React.FC<MapProps> = ({ sensors, ngos, events, onSensorClick }) => {
               <div>
                 <h3 className="font-bold">{ngo.name}</h3>
                 <p>Specialization: {ngo.specialization}</p>
-                <p>Wallet: {'${ngo.walletAddress.substring(0, 6)}...${ngo.walletAddress.substring(38)}'}</p>
+                <p>Wallet: {`${ngo.walletAddress.substring(0, 6)}...${ngo.walletAddress.substring(38)}`}</p>
                 <p>Contact: {ngo.phone}</p>
               </div>
             </Popup>
