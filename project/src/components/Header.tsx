@@ -45,10 +45,11 @@ const Header: React.FC = () => {
 
   return (
     <header className="bg-gradient-to-r from-blue-900 to-indigo-800 shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
+        <div className="flex justify-between h-16 ">
           {/* Left Section: Logo & Navigation */}
-          <div className="flex">
+          <div className="flex ">
             <div className="flex-shrink-0 flex items-center">
               <Link to="/" className="flex items-center">
                 <Shield className="h-8 w-8 text-blue-300" />
