@@ -7,8 +7,11 @@ import SimulatorPage from './pages/SimulatorPage';
 import { initBlockchain } from './utils/blockchain';
 import NewsVerificationPage from './pages/NewsVerification';
 import NotFound from './pages/NotFound';
-// import UserLogin from './pages/userLogin';
-import UserLogin from './pages/UserLogin';
+import { Signup } from './pages/Signup';
+import Login from './pages/Login';
+
+
+
 function App() {
   useEffect(() => {
     // Initialize blockchain connection
@@ -22,7 +25,8 @@ function App() {
         <main>
           <Routes>
             <Route path="/" element={<Dashboard />} />
-            <Route path = "/login" element = {<UserLogin/>}/>
+            <Route path = "/signup" element = {<Signup/>}/>
+            <Route path = "/login" element = {<Login/>}/>
             <Route path="/simulator" element={<SimulatorPage />} />
             <Route path="/News" element={<NewsVerificationPage />} />
             <Route path="*" element = {<NotFound/>}/>
