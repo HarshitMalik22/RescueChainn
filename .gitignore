@@ -1,21 +1,26 @@
-# Dependencies
-/node_modules
-package-lock.json
+# IDE - VS Code
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
 
-# IDE files
+# IDE - Visual Studio
 .vs/
-.vscode/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
 
-# Build outputs
-/dist
-/build
+# Dependencies
+node_modules/
+package-lock.json
 
-# Environment files
+# Build
+dist/
+build/
+*.zip
+
+# Environment
 .env
 .env.local
 .env.development.local
