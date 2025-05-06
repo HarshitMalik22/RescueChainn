@@ -1,0 +1,28 @@
+# IDE - VS Code
+.vscode/
+
+# IDE - Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build
+/build
+/dist
+*.zip
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
