@@ -46,6 +46,12 @@ export const Signup = () => {
       setError('Passwords do not match.');
       return;
     }
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long.');
+      return;
+    }
+    // Simulate signup (replace with actual backend API call)
+    
 
     // You can send the data to your backend here
     console.log('User signed up:', { name, email, password });
