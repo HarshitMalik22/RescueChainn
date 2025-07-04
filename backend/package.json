@@ -9,7 +9,11 @@
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["blockchain", "disaster-relief", "web3"],
+  "keywords": [
+    "blockchain",
+    "disaster-relief",
+    "web3"
+  ],
   "author": "Harshit Malik",
   "license": "MIT",
   "type": "commonjs",
@@ -17,11 +21,15 @@
     "@supabase/supabase-js": "^2.49.4",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.5.1",
+    "helmet": "^8.1.0",
+    "zod": "^3.25.67",
+    "zod-validation-error": "^3.5.2"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.1",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
     "@types/node": "^22.15.18",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",

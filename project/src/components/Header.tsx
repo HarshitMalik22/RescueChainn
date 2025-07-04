@@ -1,61 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { AlertTriangle, BarChart3, Shield, Menu, X, ExternalLink, Newspaper, LogOut, User } from 'lucide-react';
-import { connectWallet, getWalletAddress, isWalletConnected } from '../utils/blockchain';
-import { getCurrentUser, signOut } from '../utils/supabase';
-import ngoQRCode from '../assets/qrImage.jpg';
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { AlertTriangle, BarChart3, Shield, Menu, X, ExternalLink, Newspaper } from 'lucide-react';
+import { useMetaMask } from '../hooks/useMetaMask';
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [walletAddress, setWalletAddress] = useState<string | null>(null);
-  const [isConnecting, setIsConnecting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [showUPIModal, setShowUPIModal] = useState(false);
-  const [user, setUser] = useState<any>(null);
   const location = useLocation();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const checkConnections = async () => {
-      // Check wallet connection
-      if (isWalletConnected()) {
-        const address = await getWalletAddress();
-        setWalletAddress(address);
-      }
-      
-      // Check user authentication
-      const currentUser = await getCurrentUser();
-      setUser(currentUser);
-    };
-    
-    checkConnections();
-  }, []);
+  
+  const {
+    isConnected,
+    address: walletAddress,
+    connect,
+    disconnect,
+    isConnecting
+  } = useMetaMask();
 
   const handleConnectWallet = async () => {
-    setIsConnecting(true);
-    setError(null);
     try {
-      const result = await connectWallet();
-      if (result?.success && result.address) {
-        setWalletAddress(result.address);
-      } else {
-        setError(result?.error || 'Wallet connection failed');
-      }
+      await connect();
     } catch (err) {
-      setError('Failed to connect wallet');
-      console.error(err);
-    } finally {
-      setIsConnecting(false);
-    }
-  };
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      setUser(null);
-      navigate('/login');
-    } catch (error) {
-      console.error('Error signing out:', error);
+      console.error('Failed to connect wallet:', err);
     }
   };
 
@@ -113,57 +77,53 @@ const Header: React.FC = () => {
                 <Newspaper className="mr-2 h-5 w-5" />
                 News Intelligence
               </Link>
+              <Link
+                to="/test-wallet"
+                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-all ${
+                  location.pathname === '/test-wallet'
+                    ? 'border-purple-400 text-purple-400 shadow-lg shadow-purple-400/20'
+                    : 'border-transparent text-gray-300 hover:text-purple-300 hover:border-gray-500'
+                }`}
+              >
+                <div className="w-5 h-5 mr-2">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+                    <path d="M20.5 3.5h-17A2.5 2.5 0 001 6v12a2.5 2.5 0 002.5 2.5h17a2.5 2.5 0 002.5-2.5V6a2.5 2.5 0 00-2.5-2.5zm-17 1h17a1.5 1.5 0 011.5 1.5v12a1.5 1.5 0 01-1.5 1.5h-17A1.5 1.5 0 012 19.5v-12A1.5 1.5 0 013.5 6z"/>
+                    <path d="M6 10h12v1H6z"/>
+                    <path d="M6 13h8v1H6z"/>
+                  </svg>
+                </div>
+                Wallet Test
+              </Link>
             </nav>
           </div>
 
           {/* Right Section: User, Wallet & UPI Payment */}
           <div className="hidden md:flex items-center space-x-4">
-            {/* User Info */}
-            {user ? (
-              <div className="flex items-center space-x-3">
-                <div className="flex items-center space-x-2 bg-gray-800/50 px-3 py-2 rounded-lg border border-gray-700/50">
-                  <User className="h-4 w-4 text-cyan-400" />
-                  <span className="text-gray-300 text-sm">
-                    {user.user_metadata?.name || user.email?.split('@')[0]}
-                  </span>
-                </div>
-                <button
-                  onClick={handleSignOut}
-                  className="inline-flex items-center px-3 py-2 border border-gray-600 text-sm font-medium rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 hover:border-gray-500 transition-all"
-                >
-                  <LogOut className="mr-1 h-4 w-4" />
-                  Sign Out
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center space-x-3">
-                <Link
-                  to="/login"
-                  className="text-gray-300 hover:text-cyan-300 text-sm font-medium transition-colors"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  to="/signup"
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 transition-all shadow-lg hover:shadow-xl"
-                >
-                  Sign Up
-                </Link>
-              </div>
-            )}
+
 
             {/* Wallet Connection */}
-            {walletAddress ? (
-              <div className="flex items-center bg-gradient-to-r from-green-900/30 to-emerald-900/30 border border-green-500/30 px-4 py-2 rounded-lg text-green-300 text-sm">
-                <div className="h-2 w-2 rounded-full bg-green-400 mr-2 animate-pulse" />
-                <span className="font-mono">{formatWalletAddress(walletAddress)}</span>
+            {isConnected && walletAddress ? (
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center bg-gradient-to-r from-green-900/30 to-emerald-900/30 border border-green-500/30 px-4 py-2 rounded-lg text-green-300 text-sm">
+                  <div className="h-2 w-2 rounded-full bg-green-400 mr-2 animate-pulse" />
+                  <span className="font-mono">{formatWalletAddress(walletAddress)}</span>
+                </div>
+                <button
+                  onClick={disconnect}
+                  className="px-4 py-2 bg-red-600/20 border border-red-500/30 text-red-300 hover:bg-red-600/30 rounded-lg text-sm font-medium transition-colors"
+                >
+                  Disconnect
+                </button>
               </div>
             ) : (
               <button
                 onClick={handleConnectWallet}
                 disabled={isConnecting}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all disabled:opacity-50"
+                className={`px-4 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white rounded-lg text-sm font-medium transition-all transform hover:scale-105 ${
+                  isConnecting ? 'opacity-75 cursor-not-allowed' : ''
+                }`}
               >
+                {isConnecting ? 'Connecting...' : 'Connect Wallet'}
                 {isConnecting ? (
                   <>
                     <svg
@@ -197,9 +157,9 @@ const Header: React.FC = () => {
               </button>
             )}
 
-            {/* UPI Payment Button */}
+            {/* NGO Donation Button */}
             <button
-              onClick={() => setShowUPIModal(true)}
+              onClick={() => {}}
               className="px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 transition-all"
             >
               NGO Donation
@@ -263,98 +223,102 @@ const Header: React.FC = () => {
                   News Intelligence
                 </div>
               </Link>
-              
-              {/* Mobile User Section */}
-              <div className="pl-3 pr-4 py-3 border-t border-gray-700 mt-2">
-                {user ? (
-                  <div className="space-y-3">
-                    <div className="flex items-center space-x-2 text-gray-300">
-                      <User className="h-4 w-4 text-cyan-400" />
-                      <span className="text-sm">
-                        {user.user_metadata?.name || user.email?.split('@')[0]}
+              <Link
+                to="/test-wallet"
+                className={`block pl-3 pr-4 py-3 border-l-4 text-base font-medium transition-all ${
+                  location.pathname === '/test-wallet'
+                    ? 'bg-gray-800 border-purple-400 text-purple-400'
+                    : 'border-transparent text-gray-300 hover:bg-gray-700 hover:text-white'
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <div className="flex items-center">
+                  <div className="w-5 h-5 mr-3">
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
+                      <path d="M20.5 3.5h-17A2.5 2.5 0 001 6v12a2.5 2.5 0 002.5 2.5h17a2.5 2.5 0 002.5-2.5V6a2.5 2.5 0 00-2.5-2.5zm-17 1h17a1.5 1.5 0 011.5 1.5v12a1.5 1.5 0 01-1.5 1.5h-17A1.5 1.5 0 012 19.5v-12A1.5 1.5 0 013.5 6z"/>
+                      <path d="M6 10h12v1H6z"/>
+                      <path d="M6 13h8v1H6z"/>
+                    </svg>
+                  </div>
+                  Wallet Test
+                </div>
+              </Link>
+            </div>
+            
+            {/* Mobile Wallet Connection */}
+            <div className="pt-2 pb-3 px-4">
+              {isConnected && walletAddress ? (
+                <div className="flex flex-col space-y-2">
+                  <div className="flex items-center justify-between bg-gray-800/50 p-3 rounded-lg">
+                    <div className="flex items-center">
+                      <div className="h-2 w-2 rounded-full bg-green-400 mr-2 animate-pulse" />
+                      <span className="font-mono text-sm text-green-300">
+                        {formatWalletAddress(walletAddress)}
                       </span>
                     </div>
                     <button
-                      onClick={handleSignOut}
-                      className="w-full text-left px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded transition-colors"
+                      onClick={() => {
+                        disconnect();
+                        setIsMenuOpen(false);
+                      }}
+                      className="text-red-400 hover:text-red-300 text-sm"
                     >
-                      Sign Out
+                      Disconnect
                     </button>
                   </div>
-                ) : (
-                  <div className="space-y-2">
-                    <Link
-                      to="/login"
-                      className="block px-3 py-2 text-sm text-gray-300 hover:text-white hover:bg-gray-700 rounded transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Sign In
-                    </Link>
-                    <Link
-                      to="/signup"
-                      className="block px-3 py-2 text-sm text-white bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 rounded transition-all"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Sign Up
-                    </Link>
-                  </div>
-                )}
-                
-                {/* Mobile Wallet Connection */}
-                {walletAddress ? (
-                  <div className="mt-3 inline-flex items-center bg-gradient-to-r from-green-900/30 to-emerald-900/30 border border-green-500/30 px-3 py-2 rounded-lg text-green-300 text-sm">
-                    <div className="h-2 w-2 rounded-full bg-green-400 mr-2 animate-pulse" />
-                    <span className="font-mono">{formatWalletAddress(walletAddress)}</span>
-                  </div>
-                ) : (
-                  <button
-                    onClick={handleConnectWallet}
-                    disabled={isConnecting}
-                    className="w-full mt-3 px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all"
-                  >
-                    {isConnecting ? 'Connecting...' : 'Connect Wallet'}
-                  </button>
-                )}
-              </div>
+                </div>
+              ) : (
+                <button
+                  onClick={async () => {
+                    await handleConnectWallet();
+                    setIsMenuOpen(false);
+                  }}
+                  disabled={isConnecting}
+                  className={`w-full flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 transition-all ${
+                    isConnecting ? 'opacity-75 cursor-not-allowed' : ''
+                  }`}
+                >
+                  {isConnecting ? (
+                    <>
+                      <svg
+                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        />
+                      </svg>
+                      Connecting...
+                    </>
+                  ) : (
+                    'Connect Wallet'
+                  )}
+                </button>
+              )}
+              
+              {/* Mobile Donation Button */}
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                className="mt-2 w-full px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 transition-all"
+              >
+                NGO Donation
+              </button>
             </div>
           </div>
         )}
       </div>
-
-      {/* Error Message */}
-      {error && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
-          <div className="bg-red-900/20 border border-red-500/30 text-red-300 p-4 rounded-lg text-sm">
-            {error}
-          </div>
-        </div>
-      )}
-
-      {/* UPI Payment Modal */}
-      {showUPIModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm z-50">
-          <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-8 rounded-2xl border border-gray-700/50 shadow-2xl relative max-w-sm mx-4">
-            <button
-              onClick={() => setShowUPIModal(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl transition-colors"
-            >
-              &times;
-            </button>
-            <div className="text-center">
-              <h3 className="text-2xl font-bold text-white mb-2">NGO Donation</h3>
-              <p className="text-gray-400 mb-6">Scan QR code to donate via UPI</p>
-              <img
-                src={ngoQRCode}
-                alt="UPI QR Code"
-                className="w-64 h-64 mx-auto rounded-xl border-2 border-gray-600 shadow-lg"
-              />
-              <p className="text-sm text-gray-500 mt-4">
-                Secure payment powered by UPI
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
     </header>
   );
 };
