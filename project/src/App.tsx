@@ -12,6 +12,7 @@ const Header = lazy(() => import('./components/Header'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const SimulatorPage = lazy(() => import('./pages/SimulatorPage'));
 const NewsVerificationPage = lazy(() => import('./pages/NewsVerification'));
+const WalletPage = lazy(() => import('./pages/WalletPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const MetaMaskTest = lazy(() => import('./components/MetaMaskTest'));
 
@@ -55,6 +56,7 @@ const AppRoutes = () => (
     <Route path="/" element={<Dashboard />} />
     <Route path="/simulator" element={<SimulatorPage />} />
     <Route path="/news" element={<NewsVerificationPage />} />
+    <Route path="/wallet" element={<WalletPage />} />
     <Route path="/test-wallet" element={<MetaMaskTest />} />
     <Route path="*" element={<NotFound />} />
   </Routes>

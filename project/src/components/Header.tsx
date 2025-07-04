@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { AlertTriangle, BarChart3, Shield, Menu, X, ExternalLink, Newspaper } from 'lucide-react';
+import { AlertTriangle, BarChart3, Shield, Menu, X, ExternalLink, Newspaper, Wallet } from 'lucide-react';
 import { useMetaMask } from '../hooks/useMetaMask';
 
 const Header: React.FC = () => {
@@ -69,13 +69,24 @@ const Header: React.FC = () => {
               <Link
                 to="/news"
                 className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-all ${
-                  location.pathname === '/news'
-                    ? 'border-cyan-400 text-cyan-400 shadow-lg shadow-cyan-400/20'
-                    : 'border-transparent text-gray-300 hover:text-cyan-300 hover:border-gray-500'
+                  location.pathname === '/news' 
+                    ? 'border-cyan-400 text-gray-100' 
+                    : 'border-transparent text-gray-300 hover:border-gray-300 hover:text-gray-100'
                 }`}
               >
-                <Newspaper className="mr-2 h-5 w-5" />
-                News Intelligence
+                <Newspaper className="mr-1.5 h-4 w-4" />
+                News Verification
+              </Link>
+              <Link
+                to="/wallet"
+                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-all ${
+                  location.pathname === '/wallet' 
+                    ? 'border-cyan-400 text-gray-100' 
+                    : 'border-transparent text-gray-300 hover:border-gray-300 hover:text-gray-100'
+                }`}
+              >
+                <Wallet className="mr-1.5 h-4 w-4" />
+                Wallet
               </Link>
               <Link
                 to="/test-wallet"
@@ -211,17 +222,26 @@ const Header: React.FC = () => {
               </Link>
               <Link
                 to="/news"
-                className={`block pl-3 pr-4 py-3 border-l-4 text-base font-medium transition-all ${
+                className={`block px-3 py-2 rounded-md text-base font-medium ${
                   location.pathname === '/news'
-                    ? 'bg-gray-800 border-cyan-400 text-cyan-400'
-                    : 'border-transparent text-gray-300 hover:bg-gray-700 hover:text-white'
+                    ? 'bg-gray-900 text-white'
+                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
-                <div className="flex items-center">
-                  <Newspaper className="mr-3 h-5 w-5" />
-                  News Intelligence
-                </div>
+                News Verification
+              </Link>
+              <Link
+                to="/wallet"
+                className={`flex items-center px-3 py-2 rounded-md text-base font-medium ${
+                  location.pathname === '/wallet'
+                    ? 'bg-gray-900 text-white'
+                    : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Wallet className="mr-2 h-5 w-5" />
+                Wallet
               </Link>
               <Link
                 to="/test-wallet"
